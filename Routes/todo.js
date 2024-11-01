@@ -8,7 +8,7 @@ let todos = [
 
 // GET all todos
 router.get('/', (req, res) => {
-    res.json(todos);
+    res.json(todos); 
 });
  
 // POST a new todo
