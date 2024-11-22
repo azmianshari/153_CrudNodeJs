@@ -12,7 +12,7 @@ let todos = [
 
 //Endpoint untuk mendapatkan data todos
 router.get('/', (req, res) => {
-    res.json(todos);
+    res.json(todos); 
 });
 
 
