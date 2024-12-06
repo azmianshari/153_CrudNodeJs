@@ -1,48 +1,46 @@
 const express = require('express');
 const app = express();
-
-
-const todoRoutes = require('./routes/tododb.js');
 require('dotenv').config();
 const port = process.env.PORT;
 
-
 const db = require('./database/db');
-const expressLayouts = require('express-ejs-layouts')
-app.use(expressLayouts);
-
+const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const authRoutes = require('./routes/authRoutes');
 const { isAuthenticated } = require('./middlewares/middlewares.js');
+const todoRoutes = require('./routes/tododb.js');
 
+
+app.use(expressLayouts);
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Konfigurasi express-session
 app.use(session({
-    secret: process.env.SESSION_SECRET, // Gunakan secret key yang aman
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // Set ke true jika menggunakan HTTPS
+    cookie: { secure: false }
 }));
-
-app.use(express.json());
 
 app.use('/', authRoutes);
 
-
+// Menggunakan rute untuk todo
 app.use('/todos', todoRoutes);
 
 app.set('view engine', 'ejs');
+
 app.get('/', isAuthenticated, (req, res) => {
     res.render('index', {
         layout: 'layouts/main-layouts'
-        });
+    });
 });
+
 app.get('/contact', (req, res) => {
     res.render('contact', {
         layout: 'layouts/main-layouts'
-        });
+    });
 });
 
 app.get('/todo-view', isAuthenticated, (req, res) => {

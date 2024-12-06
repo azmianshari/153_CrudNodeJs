@@ -36,7 +36,6 @@ router.post('/login', (req, res) => {
             if (err) return res.status(500).send('Error checking password');
             if (!isMatch) return res.status(401).send('Incorrect password');
 
-            // Simpan userId dalam sesi setelah login berhasil
             req.session.userId = results[0].id;
             res.redirect('/'); // Arahkan ke halaman utama setelah login
         });
@@ -59,3 +58,6 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
+
+
+

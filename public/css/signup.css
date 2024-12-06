@@ -1,0 +1,116 @@
+/* Signup */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f4f4f4, #e0f7fa);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.navbar {
+    display: none;
+}
+
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+/* Card Signup Form */
+.card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    margin: 20px;
+}
+
+/* Logo */
+.logo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+/* Heading */
+h1 {
+    font-size: 28px;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Form Group Input */
+form .form-group {
+    margin-bottom: 20px;
+}
+
+form .form-group input {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* Button Signup */
+form button {
+    width: 100%;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Button Hover Effect */
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Link ke Login */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Text */
+.desk p {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-top: 15px;
+}
+
+/* Media Queries untuk Responsif */
+@media (max-width: 768px) {
+    .card {
+        padding: 30px;
+    }
+    form input {
+        font-size: 14px;
+        padding: 10px;
+    }
+    form button {
+        font-size: 16px;
+    }
+}

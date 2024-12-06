@@ -1,55 +1,87 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database/db'); // Mengimpor koneksi database
+const db = require('../database/db'); // Assuming db.js exports a configured connection
 
-// Endpoint untuk mendapatkan semua tugas
+// Endpoint to get all todos
 router.get('/', (req, res) => {
     db.query('SELECT * FROM todos', (err, results) => {
-        if (err) return res.status(500).send('Internal Server Error');
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
         res.json(results);
     });
 });
 
-// Endpoint untuk mendapatkan tugas berdasarkan ID
+// Endpoint to get a todo by ID
 router.get('/:id', (req, res) => {
-    db.query('SELECT * FROM todos WHERE id = ?', [req.params.id], (err, results) => {
-        if (err) return res.status(500).send('Internal Server Error');
-        if (results.length === 0) return res.status(404).send('Tugas tidak ditemukan');
+    const todoId = req.params.id;
+    db.query('SELECT * FROM todos WHERE id = ?', [todoId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        if (results.length === 0) {
+            return res.status(404).send('Todo not found');
+        }
         res.json(results[0]);
     });
 });
 
-// Endpoint untuk menambahkan tugas baru
+// Endpoint to add a new todo
 router.post('/', (req, res) => {
     const { task } = req.body;
+
+    // Validate input
     if (!task || task.trim() === '') {
-        return res.status(400).send('Tugas tidak boleh kosong');
+        return res.status(400).send('Task cannot be empty');
     }
 
     db.query('INSERT INTO todos (task) VALUES (?)', [task.trim()], (err, results) => {
-        if (err) return res.status(500).send('Internal Server Error');
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
         const newTodo = { id: results.insertId, task: task.trim(), completed: false };
-        res.status(201).json(newTodo);
+        res.status(201).json(newTodo); // Respond with 201 for successful creation
     });
 });
 
-// Endpoint untuk memperbarui tugas
+// Endpoint to update an existing todo
 router.put('/:id', (req, res) => {
     const { task, completed } = req.body;
+    const todoId = req.params.id;
 
-    db.query('UPDATE todos SET task = ?, completed = ? WHERE id = ?', [task, completed, req.params.id], (err, results) => {
-        if (err) return res.status(500).send('Internal Server Error');
-        if (results.affectedRows === 0) return res.status(404).send('Tugas tidak ditemukan');
-        res.json({ id: req.params.id, task, completed });
+    // Ensure the task is not empty
+    if (!task || task.trim() === '') {
+        return res.status(400).send('Task cannot be empty');
+    }
+
+    db.query('UPDATE todos SET task = ?, completed = ? WHERE id = ?', [task.trim(), completed, todoId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).send('Todo not found');
+        }
+        res.json({ id: todoId, task: task.trim(), completed: completed });
     });
 });
 
-// Endpoint untuk menghapus tugas
+// Endpoint to delete a todo by ID
 router.delete('/:id', (req, res) => {
-    db.query('DELETE FROM todos WHERE id = ?', [req.params.id], (err, results) => {
-        if (err) return res.status(500).send('Internal Server Error');
-        if (results.affectedRows === 0) return res.status(404).send('Tugas tidak ditemukan');
-        res.status(204).send();
+    const todoId = req.params.id;
+    
+    db.query('DELETE FROM todos WHERE id = ?', [todoId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).send('Todo not found');
+        }
+        res.status(204).send(); // No content response for successful deletion
     });
 });
 
